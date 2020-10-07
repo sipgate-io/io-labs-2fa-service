@@ -61,27 +61,7 @@ app.get('/verify', (request, response) => {
 });
 
 app.post('/verify', async (request, response) => {
-	const code = request.body['code'];
-	if (code) {
-		const entry = userDatabase.find((entry) => mail === entry.mail);
-		if (entry) {
-			const generatedKey = generateKey();
-			keyStorage[mail] = generateKey;
-
-			try {
-				await sendAuthentificationSMS(entry.phonenumber, generatedKey);
-				response
-					.writeHead(200)
-					.sendFile(path.join(__dirname + '/html/verify.html'));
-			} catch (error) {
-				response.writeHead(500).end(`fail: ${error.message}`);
-			}
-		} else {
-			response.writeHead(401).end('Mail address not found.');
-		}
-	} else {
-		response.writeHead(401).end('No 2FA code entered!');
-	}
+	//TODO implement verification
 });
 
 app.post('/send2FA', async (request, response) => {
