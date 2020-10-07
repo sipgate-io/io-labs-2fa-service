@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify 2FA code</title>
+  </head>
+  <body>
+    <h2>Enter your 2FA code</h2>
+    <form action="/verify" method="POST">
+      <input type="password" placeholder="2FA code" name="code" />
+      <input type="submit" name="submit" />
+    </form>
+  </body>
+</html>
