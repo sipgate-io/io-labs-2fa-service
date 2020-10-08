@@ -3,15 +3,18 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
-const username = process.env.SIPGATEDEVEMAIL;
-const password = process.env.SIPGATEDEVPASSWORD;
+const USERNAME = process.env.SIPGATE_EMAIL;
+const PASSWORD = process.env.SIPGATE_PASSWORD;
+const SMS_EXTENSION = process.env.SIPGATE_SMS_EXTENSION;
+
 // const client = sipgateIO({ username, password });
 
-const smsExtension = 's0';
+const EXPIRATION_TIME_IN_MS = 5 * 60 * 1000;
+const TOKEN_DIGIT_COUNT = 6;
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use('/', express.static(__dirname + '/html', { extensions: ['html'] }));
 const port = 3000;
 
@@ -74,22 +77,31 @@ app.post('/verify', (request, response) => {
 		return;
 	}
 
-	//Todo: check expiration date
+	const expirationTime = new Date(
+		tokenPair.date.getTime() + EXPIRATION_TIME_IN_MS
+	);
+
+	if (new Date() > expirationTime) {
+		response.status(401).send('Token expired!');
+		delete tokenStorage[mail];
+		return;
+	}
 
 	response.sendStatus(200);
+	delete tokenStorage[mail];
 });
 
 app.listen(port, () => {
 	console.log(`Example app listening at http://localhost:${port}/`);
 });
 
-async function sendAuthentificationSMS(number, key) {
+async function sendAuthentificationSMS(number, token) {
 	const message = `Hello, your two-factor authentification token is: ${token}`;
 
 	const shortMessage = {
 		message,
 		to: number,
-		smsId: smsExtension,
+		smsId: SMS_EXTENSION,
 	};
 	const sms = createSMSModule(client);
 
@@ -97,5 +109,9 @@ async function sendAuthentificationSMS(number, key) {
 }
 
 function generateToken() {
-	return Math.floor(Math.random() * 10000);
+	let token = '';
+	for (let i = 0; i < TOKEN_DIGIT_COUNT; i++) {
+		token += Math.floor(Math.random() * 10);
+	}
+	return token;
 }
