@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verify 2FA token</title>
-  </head>
-  <body>
-    <h2>Enter your 2FA token</h2>
-    <form action="/verify" method="POST">
-      <input type="hidden" value="" id="mail" name="mail"/>
-      <input type="password" placeholder="2FA token" name="token" />
-      <input type="submit" name="submit" />
-    </form>
-    <script>
-      const mailAddress = new URLSearchParams(window.location.search).get("mail");
-      let mailField = document.getElementById("mail");
-      mailField.setAttribute("value", mailAddress);
-    </script>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Verify 2FA token</title>
+	</head>
+	<body>
+		<h2>Enter your 2FA token</h2>
+		<form action="/verify" method="POST">
+			<input type="hidden" value="" id="mail" name="mail" />
+			<input type="text" placeholder="2FA token" name="token" />
+			<input type="submit" name="submit" />
+		</form>
+		<script>
+			const mailAddress = new URLSearchParams(window.location.search).get(
+				'mail'
+			);
+			let mailField = document.getElementById('mail');
+			mailField.setAttribute('value', mailAddress);
+		</script>
+	</body>
 </html>
