@@ -12,71 +12,71 @@ const smsExtension = 's0';
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
-app.set('view engine', 'pug');
-app.set('views', 'src/views');
+app.use('/', express.static(__dirname + '/html', { extensions: ['html'] }));
 const port = 3000;
 
 const jsonFile = fs.readFileSync('database.json');
 const userDatabase = JSON.parse(jsonFile);
 
-const keyStorage = {};
-
-app.get('/', (request, response) => {
-	response.sendFile(path.join(__dirname + '/html/index.html'));
-});
+const tokenStorage = {};
 
 app.post('/login', async (request, response) => {
 	const mail = request.body['mail'];
-	if (mail) {
-		const entry = userDatabase.find((entry) => mail === entry.mail);
-		if (entry) {
-			const generatedKey = generateKey();
-			keyStorage[mail] = generateKey;
-
-			try {
-				// FIXME wieder einkommentieren
-				//await sendAuthentificationSMS(entry.phonenumber, generatedKey);
-				response.redirect('/verify?mail=' + mail);
-			} catch (error) {
-				response.writeHead(500).end(`fail: ${error.message}`);
-			}
-		} else {
-			response.writeHead(401).end('Mail address not found.');
-		}
-	} else {
-		response.writeHead(401).end('Please enter a valid mail address.');
-	}
-});
-
-app.get('/verify', (request, response) => {
-	const mail = request.query['mail'];
-	if (mail) {
-		response.render('verify', {
-			title: 'Verify your 2fa code',
-			url: 'verify?mail=' + mail,
-		});
-	} else {
-		response.writeHead(300).end('Mail address not set!');
-	}
-});
-
-app.post('/verify', async (request, response) => {
-	//TODO implement verification
-});
-
-app.post('/send2FA', async (request, response) => {
-	const { number, key } = request.body;
-	if (!number || !key) {
-		response.writeHead(400).end(`fail: please define number and key.`);
+	if (!mail) {
+		response.status(401).send('Please enter a valid mail address.');
 		return;
 	}
+
+	const entry = userDatabase.find((entry) => mail === entry.mail);
+	if (!entry) {
+		response.status(401).send('Mail address not found.');
+		return;
+	}
+
+	const generatedToken = generateToken();
+	tokenStorage[mail] = {
+		token: String(generatedToken),
+		date: new Date(),
+	};
+
 	try {
-		await sendAuthentificationSMS(number, key);
+		// FIXME wieder einkommentieren
+		//await sendAuthentificationSMS(entry.phonenumber, generatedToken);
+		console.log(generatedToken);
+		response.redirect('/verify?mail=' + mail);
 	} catch (error) {
-		response.writeHead(500).end(`fail: ${error.message}`);
+		response.status(500).send(`fail: ${error.message}`);
+	}
+});
+
+app.post('/verify', (request, response) => {
+	let { mail, token } = request.body;
+	if (!mail) {
+		response.status(400).send('Mail address not set!');
 		return;
 	}
-	response.writeHead(200).end('success');
+
+	if (!token) {
+		response.status(400).send('Token not set!');
+		return;
+	}
+
+	token = token.trim();
+	const tokenPair = tokenStorage[mail];
+
+	if (!tokenPair) {
+		response.status(400).send('No Token saved for given mail!');
+		return;
+	}
+
+	if (tokenPair.token != token) {
+		response.status(401).send('Token incorrect!');
+		return;
+	}
+
+	//Todo: check expiration date
+
+	response.sendStatus(200);
 });
 
 app.listen(port, () => {
@@ -84,7 +84,7 @@ app.listen(port, () => {
 });
 
 async function sendAuthentificationSMS(number, key) {
-	const message = `Hello, your two-factor authentification key is: ${key}`;
+	const message = `Hello, your two-factor authentification token is: ${token}`;
 
 	const shortMessage = {
 		message,
@@ -96,6 +96,6 @@ async function sendAuthentificationSMS(number, key) {
 	await sms.send(shortMessage);
 }
 
-function generateKey() {
+function generateToken() {
 	return Math.floor(Math.random() * 10000);
 }
