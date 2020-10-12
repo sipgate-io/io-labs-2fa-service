@@ -1,13 +1,19 @@
 const { createSMSModule, sipgateIO } = require('sipgateio');
 const express = require('express');
-const path = require('path');
 const fs = require('fs');
 
 const USERNAME = process.env.SIPGATE_EMAIL;
 const PASSWORD = process.env.SIPGATE_PASSWORD;
 const SMS_EXTENSION = process.env.SIPGATE_SMS_EXTENSION;
 
-// const client = sipgateIO({ username, password });
+if (!USERNAME || !PASSWORD || !SMS_EXTENSION) {
+	console.error(
+		'you need to set the `SIPGATE_EMAIL`, `SIPGATE_PASSWORD` and `SIPGATE_SMS_EXTENSION` environment variables'
+	);
+	return;
+}
+
+const client = sipgateIO({ username: USERNAME, password: PASSWORD });
 
 const EXPIRATION_TIME_IN_MS = 5 * 60 * 1000;
 const TOKEN_DIGIT_COUNT = 6;
@@ -43,8 +49,7 @@ app.post('/login', async (request, response) => {
 	};
 
 	try {
-		// FIXME wieder einkommentieren
-		//await sendAuthentificationSMS(entry.phonenumber, generatedToken);
+		await sendAuthentificationSMS(entry.phonenumber, generatedToken);
 		console.log(generatedToken);
 		response.redirect('/verify?mail=' + mail);
 	} catch (error) {
