@@ -32,13 +32,13 @@ const tokenStorage = {};
 app.post('/login', async (request, response) => {
 	const mail = request.body['mail'];
 	if (!mail) {
-		response.status(401).send('Please enter a valid mail address.');
+		response.redirect('/?error=Please enter a mail address');
 		return;
 	}
 
 	const entry = userDatabase.find((entry) => mail === entry.mail);
 	if (!entry) {
-		response.status(401).send('Mail address not found.');
+		response.redirect('/?error=Mail address not found');
 		return;
 	}
 
@@ -49,23 +49,23 @@ app.post('/login', async (request, response) => {
 	};
 
 	try {
-		await sendAuthentificationSMS(entry.phonenumber, generatedToken);
+		//await sendAuthentificationSMS(entry.phonenumber, generatedToken);
 		console.log(generatedToken);
 		response.redirect('/verify?mail=' + mail);
 	} catch (error) {
-		response.status(500).send(`fail: ${error.message}`);
+		response.redirect(`/?error=error: ${error.message}`);
 	}
 });
 
 app.post('/verify', (request, response) => {
 	let { mail, token } = request.body;
 	if (!mail) {
-		response.status(400).send('Mail address not set!');
+		response.redirect('/verify?error=Mail address not set!');
 		return;
 	}
 
 	if (!token) {
-		response.status(400).send('Token not set!');
+		response.redirect(`/verify?error=Token not set!&mail=${mail}`);
 		return;
 	}
 
@@ -73,12 +73,14 @@ app.post('/verify', (request, response) => {
 	const tokenPair = tokenStorage[mail];
 
 	if (!tokenPair) {
-		response.status(400).send('No Token saved for given mail!');
+		response.redirect(
+			`/verify?error=No Token saved for given mail!&mail=${mail}`
+		);
 		return;
 	}
 
 	if (tokenPair.token != token) {
-		response.status(401).send('Token incorrect!');
+		response.redirect(`/verify?error=Token incorrect!&mail=${mail}`);
 		return;
 	}
 
@@ -87,13 +89,13 @@ app.post('/verify', (request, response) => {
 	);
 
 	if (new Date() > expirationTime) {
-		response.status(401).send('Token expired!');
+		response.redirect(`/verify?error=Token expired!&mail=${mail}`);
 		delete tokenStorage[mail];
 		return;
 	}
 
-	response.sendStatus(200);
 	delete tokenStorage[mail];
+	response.redirect(`/success`);
 });
 
 app.listen(port, () => {

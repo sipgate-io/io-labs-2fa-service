@@ -12,12 +12,19 @@
 			<input type="text" placeholder="2FA token" name="token" />
 			<input type="submit" name="submit" />
 		</form>
-		<script>
-			const mailAddress = new URLSearchParams(window.location.search).get(
-				'mail'
-			);
-			let mailField = document.getElementById('mail');
-			mailField.setAttribute('value', mailAddress);
-		</script>
+		<p id="errorText"></p>
 	</body>
+	<script>
+		const errorTextElement = document.getElementById('errorText');
+		const mailFieldElement = document.getElementById('mail');
+
+		const queryParams = new URLSearchParams(window.location.search);
+		const error = queryParams.get('error');
+		if (error) {
+			errorTextElement.innerText = error;
+		}
+
+		const mailAddress = queryParams.get('mail');
+		mailFieldElement.setAttribute('value', mailAddress);
+	</script>
 </html>
