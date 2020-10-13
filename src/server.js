@@ -30,7 +30,7 @@ const userDatabase = JSON.parse(jsonFile);
 const tokenStorage = {};
 
 app.post('/login', async (request, response) => {
-	const mail = request.body['mail'];
+	const { mail } = request.body;
 	if (!mail) {
 		response.redirect('/?error=Please enter a mail address');
 		return;
@@ -88,13 +88,12 @@ app.post('/verify', (request, response) => {
 		tokenPair.date.getTime() + EXPIRATION_TIME_IN_MS
 	);
 
+	delete tokenStorage[mail];
 	if (new Date() > expirationTime) {
 		response.redirect(`/verify?error=Token expired!&mail=${mail}`);
-		delete tokenStorage[mail];
 		return;
 	}
 
-	delete tokenStorage[mail];
 	response.redirect(`/success`);
 });
 
