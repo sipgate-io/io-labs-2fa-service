@@ -4,15 +4,18 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Verify 2FA token</title>
+		<link rel="stylesheet" href="../style.css">
 	</head>
 	<body>
-		<h2>Enter your 2FA token</h2>
+		<div class="login">
+			<h2>Enter your 2FA token</h2>
 		<form action="/verify" method="POST">
 			<input type="hidden" value="" id="mail" name="mail" />
 			<input type="text" placeholder="2FA token" name="token" />
-			<input type="submit" name="submit" />
+			<input class="primary_btn" type="submit" name="submit" />
 		</form>
 		<p id="errorText"></p>
+		</div>
 	</body>
 	<script>
 		const errorTextElement = document.getElementById('errorText');
