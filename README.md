@@ -1,18 +1,13 @@
 # Two-factor authentication with sipgate.io
 
-This example demonstrates how the [sipgateio](https://github.com/sipgate-io/sipgateio-node) library can be integrated in a simple two-factor authentication service.
+This example demonstrates how the [sipgateio](https://github.com/sipgate-io/sipgateio-node) library can be integrated in a simple two-factor authentication service as shown on our [two-factor authentication project page](https://www.sipgate.io/projects/2fa).
+
+This README is a brief setup. For a more in-depth description take a look at our [blog post on 2FA](https://www.sipgate.io/blog/2fa).
 
 ## What is two-factor authentication and why is it important?
 
 Traditionally authentication is simply performed by entering username/email and a secret password. This can be problematic when unauthorized actors get access to your credentials, since they can steal your identity.
 To increase security and avoid a single point of failure, two-factor authentication can be used. It sends a temporary secret over a second channel, like SMS or email. Both, the credentials and the temporary secret, are necessary for a successful login.
-
-## Enabling sipgate.io for your sipgate account
-
-In order to use sipgate.io, you need to book the corresponding package in your sipgate account. The most basic package is the free **sipgate.io S** package.
-
-If you use [sipgate basic](https://app.sipgatebasic.de/feature-store) or [simquadrat](https://app.simquadrat.de/feature-store) you can book packages in your product's feature store.
-If you are a _sipgate team_ user logged in with an admin account you can find the option under **Account Administration**&nbsp;>&nbsp;**Plans & Packages**.
 
 ## Getting started
 
