@@ -18,16 +18,16 @@
 		</div>
 	</body>
 	<script>
-		const errorTextElement = document.getElementById('errorText');
-		const mailFieldElement = document.getElementById('mail');
-
 		const queryParams = new URLSearchParams(window.location.search);
+
+		const mailFieldElement = document.getElementById('mail');
+		const mailAddress = queryParams.get('mail');
+		mailFieldElement.setAttribute('value', mailAddress);
+
+		const errorTextElement = document.getElementById('errorText');
 		const error = queryParams.get('error');
 		if (error) {
 			errorTextElement.innerText = error;
 		}
-
-		const mailAddress = queryParams.get('mail');
-		mailFieldElement.setAttribute('value', mailAddress);
 	</script>
 </html>

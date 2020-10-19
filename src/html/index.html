@@ -18,9 +18,9 @@
 		</div>
 	</body>
 	<script>
-		const errorTextElement = document.getElementById('errorText');
-
 		const queryParams = new URLSearchParams(window.location.search);
+
+		const errorTextElement = document.getElementById('errorText');
 		const error = queryParams.get('error');
 		if (error) {
 			errorTextElement.innerText = error;
