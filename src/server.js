@@ -21,7 +21,7 @@ const TOKEN_DIGIT_COUNT = 6;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/', express.static(__dirname + '/html', { extensions: ['html'] }));
+app.use('/', express.static(__dirname + '/html', { extensions: ['html', 'css'] }));
 const port = 3000;
 
 const jsonFile = fs.readFileSync('database.json');
