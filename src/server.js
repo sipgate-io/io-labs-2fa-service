@@ -21,7 +21,10 @@ const TOKEN_DIGIT_COUNT = 6;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/', express.static(__dirname + '/html', { extensions: ['html', 'css'] }));
+app.use(
+	'/',
+	express.static(__dirname + '/html', { extensions: ['html', 'css'] })
+);
 const port = 3000;
 
 const jsonFile = fs.readFileSync('database.json');
@@ -49,7 +52,7 @@ app.post('/login', async (request, response) => {
 	};
 
 	try {
-		//await sendAuthentificationSMS(entry.phonenumber, generatedToken);
+		await sendAuthentificationSMS(entry.phonenumber, generatedToken);
 		console.log(generatedToken);
 		response.redirect('/verify?mail=' + mail);
 	} catch (error) {
