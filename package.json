@@ -12,6 +12,6 @@
   "dependencies": {
     "express": "^4.17.1",
     "pug": "^3.0.0",
-    "sipgateio": "^2.0.0"
+    "sipgateio": "^2.1.4"
   }
 }
