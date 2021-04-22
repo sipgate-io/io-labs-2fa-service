@@ -2,18 +2,18 @@ const { createSMSModule, sipgateIO } = require('sipgateio');
 const express = require('express');
 const fs = require('fs');
 
-const USERNAME = process.env.SIPGATE_EMAIL;
-const PASSWORD = process.env.SIPGATE_PASSWORD;
+const TOKEN_ID = process.env.SIPGATE_TOKEN_ID;
+const TOKEN = process.env.SIPGATE_TOKEN;
 const SMS_EXTENSION = process.env.SIPGATE_SMS_EXTENSION;
 
-if (!USERNAME || !PASSWORD || !SMS_EXTENSION) {
+if (!TOKEN_ID || !TOKEN || !SMS_EXTENSION) {
 	console.error(
-		'you need to set the `SIPGATE_EMAIL`, `SIPGATE_PASSWORD` and `SIPGATE_SMS_EXTENSION` environment variables'
+		'you need to set the `SIPGATE_TOKEN_ID`, `SIPGATE_TOKEN` and `SIPGATE_SMS_EXTENSION` environment variables'
 	);
 	return;
 }
 
-const client = sipgateIO({ username: USERNAME, password: PASSWORD });
+const client = sipgateIO({ tokenId: TOKEN_ID, token: TOKEN });
 
 const EXPIRATION_TIME_IN_MS = 5 * 60 * 1000;
 const TOKEN_DIGIT_COUNT = 6;
