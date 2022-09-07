@@ -2,6 +2,8 @@ const { createSMSModule, sipgateIO } = require('sipgateio');
 const express = require('express');
 const fs = require('fs');
 
+require("dotenv").config();
+
 const TOKEN_ID = process.env.SIPGATE_TOKEN_ID;
 const TOKEN = process.env.SIPGATE_TOKEN;
 const SMS_EXTENSION = process.env.SIPGATE_SMS_EXTENSION;
