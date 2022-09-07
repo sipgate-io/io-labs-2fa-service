@@ -21,12 +21,20 @@ npm install
 
 ## Execution
 
-Now you should be able to launch the service. Make sure to set your credentials of your sipgate account and your SMS Extension.
+Create the `.env` file by copying the `.env.example`. Set the values according to the comment above each variable.
+
+The token should have the `sessions:sms:write` scope. For more information about personal access tokens visit https://www.sipgate.io/rest-api/authentication\#personalAccessToken.
+
+Run the application:
+
+```bash
+npm start
+```
+
+Alternatively, you can set the environment variables as part of the shell command:
 
 ```bash
 SIPGATE_TOKEN_ID=your_token_id SIPGATE_TOKEN=your_token SIPGATE_SMS_EXTENSION=s0 npm start
 ```
-The token should have the `sessions:sms:write` scope. For more information about personal access tokens visit https://www.sipgate.io/rest-api/authentication\#personalAccessToken.
-
 
 You can access the example now in your browser on [http://localhost:3000](http://localhost:3000).
